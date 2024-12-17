@@ -1,0 +1,136 @@
+import java.util.Scanner;
+
+public class Main {
+
+    
+    public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    public static boolean hasSchoolCertificate(Scanner scanner) {
+        System.out.println("Do you have a school education certificate?");
+        System.out.println("0. Not available");
+        System.out.println("1. Available");
+        int certificateChoice = scanner.nextInt();
+        return certificateChoice == 1; 
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        
+        System.out.print("Enter your last name: ");
+        String lastName = scanner.nextLine();
+        
+        System.out.print("Enter your first name: ");
+        String firstName = scanner.nextLine();
+
+        
+        if (!hasSchoolCertificate(scanner)) {
+            clearScreen();
+            System.out.println("Dear " + firstName + " " + lastName + ", you cannot be admitted to Ala-Too University due to the lack of a school education certificate.");
+            return;
+        }
+
+        
+        System.out.print("Enter your ORT score: ");
+        int ortScore = scanner.nextInt();
+
+        
+        if (ortScore < 110) {
+            clearScreen();
+            System.out.println("Dear " + firstName + " " + lastName + ", you cannot be admitted to Ala-Too University due to an insufficient ORT score.");
+            return;
+        }
+
+        
+        String englishLevel = getEnglishLevel(scanner);
+
+        
+        if (englishLevel.equals("Beginner") || englishLevel.equals("Elementary") || englishLevel.equals("Pre-Intermediate")) {
+            clearScreen();
+            System.out.println("Dear " + firstName + " " + lastName + ", you have been admitted to a one-year preparatory English language course at Ala-Too University.");
+            return;
+        }
+
+        
+        clearScreen();
+        System.out.println("Dear " + firstName + " " + lastName + ", we are pleased to inform you that you have been admitted to Ala-Too University!");
+
+        
+        System.out.println("\nSelect your specialty:");
+        System.out.println("1. Computer Engineering ($2500)");
+        System.out.println("2. Artificial Intelligence ($2200)");
+        System.out.println("3. Psychology ($1900)");
+        System.out.println("4. Journalism ($1700)");
+        System.out.println("5. International Relations ($2200)");
+        System.out.println("6. Law ($1800)");
+        System.out.println("7. Management ($2200)");
+        System.out.println("8. Medicine ($3300)");
+
+        int specialtyChoice = scanner.nextInt();
+
+        
+        String[] specialties = {"Computer Engineering", "Artificial Intelligence", "Psychology", "Journalism", "International Relations", "Law", "Management", "Medicine"};
+        int[] tuitionFees = {2500, 2200, 1900, 1700, 2200, 1800, 2200, 3300};
+
+        String specialtyName = specialties[specialtyChoice - 1];
+        int tuitionFee = tuitionFees[specialtyChoice - 1];
+
+        
+        int discount = 0;
+        if (ortScore >= 140 && ortScore <= 155) {
+            discount = 5;
+        } else if (ortScore >= 156 && ortScore <= 174) {
+            discount = 10;
+        } else if (ortScore >= 175 && ortScore <= 199) {
+            discount = 25;
+        } else if (ortScore >= 200 && ortScore <= 209) {
+            discount = 50;
+        } else if (ortScore >= 210 && ortScore <= 218) {
+            discount = 75;
+        } else if (ortScore >= 219 && ortScore <= 240) {
+            discount = 100;
+        }
+
+        
+        double discountedTuition = tuitionFee * (1 - discount / 100.0);
+
+        
+        clearScreen();
+        if (discount > 0) {
+            System.out.println("Dear " + firstName + " " + lastName + ", we congratulate you! You have been admitted to the " + specialtyName + " program at Ala-Too University. "
+                    + "The cost of your tuition with a " + discount + "% discount will be $" + discountedTuition + " per year.");
+        } else {
+            System.out.println("Dear " + firstName + " " + lastName + ", we congratulate you! You have been admitted to the " + specialtyName + " program at Ala-Too University. "
+                    + "The cost of your tuition will be $" + tuitionFee + " per year.");
+        }
+
+        scanner.close();
+    }
+
+    
+    public static String getEnglishLevel(Scanner scanner) {
+        System.out.println("Select your English proficiency level:");
+        System.out.println("1. Beginner");
+        System.out.println("2. Elementary");
+        System.out.println("3. Pre-Intermediate");
+        System.out.println("4. Intermediate");
+        System.out.println("5. Upper-Intermediate");
+        System.out.println("6. Advanced");
+        int levelChoice = scanner.nextInt();
+        
+        String[] englishLevels = {"Beginner", "Elementary", "Pre-Intermediate", "Intermediate", "Upper-Intermediate", "Advanced"};
+        return englishLevels[levelChoice - 1];
+    }
+}
